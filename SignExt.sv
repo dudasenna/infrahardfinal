@@ -1,0 +1,59 @@
+module SignExt(//TESTE PRA VER SE PEGA
+		input logic [31:0]entrada,
+		input logic [6:0] IR6_0,
+		output logic [63:0]saida
+		);
+	always_comb
+	begin 
+	case(IR6_0)
+		19: //ADDI
+		begin
+			saida[63:12] = 0;
+			saida[11:0] = entrada[31:20];
+		end
+		
+		99: //BEQ,BNE,ETC
+		begin
+			saida[1:0] = 0;
+			saida[5:2] = entrada[11:8];
+			saida[11:6] = entrada[30:25];
+			saida[12] = entrada[7];
+			saida[13] = entrada[31];
+			saida[63:14] = 0;
+		end
+		
+		103: //BNE
+		begin
+			saida[0] = 0;
+			saida[4:1] = entrada[11:8];
+			saida[10:5] = entrada[30:25];
+			saida[11] = entrada[7];
+			saida[12] = entrada[31];
+			saida[63:13] = 0;
+		end
+		
+		
+		55: //LUI
+		begin
+		saida[31:12] = entrada[31:12];
+		saida[11:0]=0;
+		if(entrada[31]==0)saida[63:32]=0;
+		else saida[63:32]=1;
+		end
+
+		3: //LD
+		begin
+			saida[63:12] = 0;
+			saida[11:0] = entrada[31:20];
+		end
+
+		35: //SD
+		begin
+			saida[4:0] = entrada[11:7];
+			saida[11:5] = entrada[31:25];
+			saida[63:12] = 0;
+		end
+		
+	endcase
+	end
+endmodule
